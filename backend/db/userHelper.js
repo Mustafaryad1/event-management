@@ -33,8 +33,7 @@ class UserDbHelper{
                 }
 
  
-
-                console.log(salt);
+                
 
                   bcrypt.hash(password,salt).then((hash,err)=>{
 
@@ -62,7 +61,18 @@ class UserDbHelper{
 
     }
 
- 
+    getUser(username){
+        return new Promise((resolve, reject)=>{
+            let query = `select * from users where username ='${username}';`;
+            this.sqlWrapper.query(query).then((result,err)=>{
+                if(err){
+                    reject(err)
+                }
+            let user = JSON.parse(result.results);
+            resolve(user)
+            })
+        })
+    }
 
     isAuthenticated(username,password){
 
@@ -89,8 +99,8 @@ class UserDbHelper{
                
 
                 //compare password
-
-                bcrypt.compare(password,user[0].user_password).then((result,err)=>{
+                console.log(password)
+                bcrypt.compare(password,user[0].password).then((result,err)=>{
 
                     if(err){
 
@@ -100,7 +110,7 @@ class UserDbHelper{
 
                     }
 
-                    resolve(user[0]);
+                    resolve({authenticated:result,user:user[0]});
 
                 }).catch(ex=>{
 

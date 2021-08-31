@@ -1,63 +1,30 @@
 const express = require('express');
-const mysql  = require('mysql');
 const bodyParser = require('body-parser');
-const parsed = require('dotenv').config().parsed
-const {mySqlWrapper, UserDbHelper} = require('./db')
+const cors = require('cors');
+require('./auth/auth');
 
-// init app 
 const app = express();
 
+// initailize middlewares
+app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
 
+// import routes
+const user_routes = require('./routes/user_routes');
+const event_routes = require('./routes/event_routes');
+const attendance_routes = require('./routes/attendance_routes');
 
-const sqlWrapper = new mySqlWrapper();
-const user = new UserDbHelper(sqlWrapper);
 
+// load routes
+app.use('/user', user_routes);
+app.use('/event', event_routes);
+app.use('/attendance', attendance_routes);
 
-
-app.post('/register',function(req,res){
-
- 
-
-    var object = req.body;
-
-    user.registerUser(object.username,object.password).then((result, err)=>{
-
-            if(err){
-
-                throw err;
-
-            }
-
-            console.log('result register:',result);
-
-            res.send(result);
-
-        }).catch(err=>{
-
-            console.log('exception:',err);
-
-            res.send(err);
-
-        });
-
- 
-
-});
-
- 
-
-app.get('/',function(req,res){
-
-        res.send('welcome to Node API.');
-
-});
 
 
 // run app
 const port = 5000;
-
 app.listen(port,()=>{
-    console.log(`server is running on port ${port}`)
+    console.log(`server is running on port ${port}`);
 })
