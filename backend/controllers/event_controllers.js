@@ -5,7 +5,7 @@ const event = new EventDbHelper(sqlWrapper);
 
 const addEvent = (req,res)=>{
     const object = req.body;
-    event.addEvent(object.name, object.describtion, object.dateOfEvent).then(restul=>{
+    event.addEvent(object.name, object.description, object.dateOfEvent).then(restul=>{
         res.send(restul)
         
     }).catch(err=>{

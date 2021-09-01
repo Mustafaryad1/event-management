@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { query } = require('express');
 const logger = require('./logger');
 const  responseHelper = require('./responseHelper');
 
@@ -13,11 +14,11 @@ class EventDbHelper{
 
     }
 
-    addEvent(name, descritption, date){    
+    addEvent(name, description, date){    
 
         return new Promise((resolve,reject)=>{
             let self = this;
-            let query = `insert into event(name, description, dateOfEvent) value('${name}','${descritption}','${date}');`
+            let query = `insert into event(name, description, dateOfEvent) value('${name}','${description}','${date}');`
             
             resolve(self.sqlWrapper.query(query));
 
